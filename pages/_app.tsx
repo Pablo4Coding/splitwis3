@@ -18,12 +18,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   /* web3Modal configuration for enabling wallet access */
   async function getWeb3Modal() {
     const web3Modal = new Web3Modal({
+      network: 'mumbai',
       cacheProvider: false,
       providerOptions: {
         walletconnect: {
           package: WalletConnectProvider,
           options: {
-            infuraId: 'b322a365347f4bf0b9ac671ce69fff24',
+            rpc: { 80001: 'https://matic-mumbai.chainstacklabs.com' },
           },
         },
       },

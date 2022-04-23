@@ -44,15 +44,20 @@ const Home: NextPage = () => {
     splitConnectContract.addExpense(description, amount);
   };
 
-  const onNewExpense = () => setLoading(false);
+  const onNewExpense = () => {
+    setLoading(false);
+    setShowAddExpense(false);
+  };
 
   const transfer = async (amount: number) => {
     if (account) {
-      await signer.sendTransaction({
-        from: account,
-        to: users.find((user) => user.address !== account)?.address,
-        value: ethers.utils.parseEther(amount.toString()),
-      }).catch(() => alert('Error. You probably dont have enough funds'));
+      await signer
+        .sendTransaction({
+          from: account,
+          to: users.find((user) => user.address !== account)?.address,
+          value: ethers.utils.parseEther(amount.toString()),
+        })
+        .catch(() => alert('Error. You probably dont have enough funds'));
     } else {
       const accounts: string[] = await ethereum.request({ method: 'eth_accounts' });
       if (accounts.length) {
