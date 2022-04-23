@@ -3,6 +3,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import { ethers } from 'ethers';
 import type { AppProps } from 'next/app';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Web3Modal from 'web3modal';
 import client from '../apollo/client';
@@ -12,6 +13,8 @@ import '../styles/globals.css';
 function MyApp({ Component, pageProps }: AppProps) {
   /* create local state to save account information after signin */
   const [account, setAccount] = useState<string | null>(null);
+  const router = useRouter();
+
   /* web3Modal configuration for enabling wallet access */
   async function getWeb3Modal() {
     const web3Modal = new Web3Modal({
@@ -36,6 +39,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       const provider = new ethers.providers.Web3Provider(connection);
       const accounts = await provider.listAccounts();
       setAccount(accounts[0]);
+      router.push('/groups');
     } catch (err) {
       console.log('error:', err);
     }
@@ -75,7 +79,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           {account && <p>{account}</p>}
         </div>
       </nav>
-      <div className="container mx-auto">
+      <div className="container max-h-full mx-auto">
         <AccountContext.Provider value={account}>
           <ApolloProvider client={client}>
             <Component {...pageProps} />
