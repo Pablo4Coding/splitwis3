@@ -50,10 +50,15 @@ function MyApp({ Component, pageProps }: AppProps) {
               </div>
             </a>
           </Link>
+          <Link href="/groups">
+            <a>
+              Groups
+            </a>
+          </Link>
           {!account && (
             <div className="">
               <button
-                className="px-4 py-2 font-bold text-white rounded bg-primary hover:bg-secondary"
+                className="px-4 py-2 font-bold rounded bg-primary hover:bg-secondary"
                 onClick={connect}>
                 Connect your wallet
               </button>
@@ -62,7 +67,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           {account && <p>{account}</p>}
         </div>
       </nav>
-      <div className="container">
+      <div className="container mx-auto">
         <AccountContext.Provider value={account}>
           <Component {...pageProps} />
         </AccountContext.Provider>

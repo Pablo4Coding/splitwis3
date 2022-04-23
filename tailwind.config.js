@@ -7,6 +7,8 @@ module.exports = {
       secondary: '#9896F1',
       tertiary: '#D59BF6',
       other: '#EDB1F1',
+      red: 'red',
+      white: 'white',
     },
   },
   plugins: [],
