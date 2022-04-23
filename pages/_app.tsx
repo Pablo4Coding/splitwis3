@@ -40,23 +40,22 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <>
-      <nav>
-        <div>
+    <div className="h-screen bg-gradient-to-r from-tertiary to-other">
+      <nav className="bg-other">
+        <div className="flex items-center justify-between w-full px-2 py-4 border-b-1">
           <Link href="/">
             <a>
-              <div>
-                <h2>Full Stack</h2>
-                <p>WEB3</p>
+              <div className="flex flex-col pl-3">
+                <h2 className="m-0 ml-3 font-medium">SplitConnect</h2>
               </div>
             </a>
           </Link>
           {!account && (
             <div className="">
               <button
-                className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+                className="px-4 py-2 font-bold text-white rounded bg-primary hover:bg-secondary"
                 onClick={connect}>
-                Connect
+                Connect your wallet
               </button>
             </div>
           )}
@@ -68,7 +67,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <Component {...pageProps} />
         </AccountContext.Provider>
       </div>
-    </>
+    </div>
   );
 }
 
