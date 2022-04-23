@@ -2,11 +2,15 @@ import type { NextPage } from 'next';
 import abi from '../SplitConnect.json';
 import { ethers } from 'ethers';
 import { useState } from 'react';
+import Users from '../components/users';
+import ExpenseForm from '../components/expense-form';
+import Loading from '../components/loading';
 
 const Home: NextPage = () => {
-  const [showAddExpense, setShowAddExpense] = useState(false);
+  const [showAddExpense, setShowAddExpense] = useState<boolean>(false);
   const [description, setDescription] = useState<string | null>(null);
   const [amount, setAmount] = useState<number | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const contractABI = abi.abi;
   const { ethereum } = window;
@@ -19,12 +23,12 @@ const Home: NextPage = () => {
   );
 
   const addExpense = () => {
+    setLoading(true);
+    console.log(loading)
     splitConnectContract.addExpense(description, amount);
   };
 
-  const onNewExpense = () => {
-    alert('New Expense Added!');
-  };
+  const onNewExpense = () => setLoading(false);
 
   splitConnectContract.on('AddExpense', onNewExpense);
 
@@ -50,10 +54,11 @@ const Home: NextPage = () => {
                 <span className="text-xl whitespace-nowrap text-gray-800 font-semibold">
                   ETH Amsterdam 2022
                 </span>
+                <Users />
                 <div className="flex">
-                  <button className="px-4 py-2 mr-4 font-bold rounded bg-secondary hover:bg-primary">
+                  {/* <button className="px-4 py-2 mr-4 font-bold rounded bg-secondary hover:bg-primary">
                     ADD USER
-                  </button>
+                  </button> */}
                   <button
                     onClick={() => setShowAddExpense(!showAddExpense)}
                     className="px-4 py-2 font-bold rounded bg-primary hover:bg-secondary">
@@ -63,32 +68,15 @@ const Home: NextPage = () => {
               </div>
             </div>
           </div>
-          {showAddExpense && (
-            <div className="absolute top-0 left-0 bg-tertiary h-screen w-full flex flex-col items-center justify-center bg-teal-lightest font-sans">
-              <div
-                className="absolute top-0 right-0 p-4 font-bold text-white cursor-pointer"
-                onClick={() => setShowAddExpense(!showAddExpense)}>
-                X
-              </div>
-              <div className="h-screen w-full absolute flex items-center justify-center bg-modal">
-                <div className="bg-secondary rounded shadow p-8 m-4 max-w-xs max-h-full text-center overflow-y-scroll">
-                  <div>
-                    <label className="text-white">Description</label>
-                    <input type="text" onChange={(e) => setDescription(e.target.value)} />
-                  </div>
-                  <div>
-                    <label className="text-white">Amount</label>
-                    <input type="text" onChange={(e) => setAmount(+e.target.value)} />
-                  </div>
-                  <button
-                    onClick={() => addExpense()}
-                    className="px-4 py-2 font-bold rounded bg-primary hover:bg-secondary">
-                    SAVE
-                  </button>
-                </div>
-              </div>
-            </div>
+          {showAddExpense && !loading && (
+            <ExpenseForm
+              changeAmount={setAmount}
+              changeDescription={setDescription}
+              changeShow={() => setShowAddExpense(!showAddExpense)}
+              save={addExpense}
+            />
           )}
+          {loading && <Loading />}
         </div>
       </div>
     </div>
