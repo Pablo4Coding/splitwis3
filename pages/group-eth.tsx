@@ -1,9 +1,10 @@
 import { ethers } from 'ethers';
 import type { NextPage } from 'next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Balances from '../components/balances';
 import ExpenseForm from '../components/expense-form';
 import Loading from '../components/loading';
+import { USERS as users } from '../constants';
 import useHasMounted from '../hooks/useHasMounted';
 import abi from '../SplitConnect.json';
 
@@ -12,12 +13,9 @@ const Home: NextPage = () => {
   const [description, setDescription] = useState<string | null>(null);
   const [amount, setAmount] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [account, setAccount] = useState<string | null>(null);
 
   const hasMounted = useHasMounted();
-
-  if (!hasMounted) {
-    return null;
-  }
 
   const contractABI = abi.abi;
   const { ethereum } = window;
@@ -29,13 +27,39 @@ const Home: NextPage = () => {
     signer,
   );
 
+  useEffect(() => {
+    ethereum.request({ method: 'eth_accounts' }).then((accounts: any) => {
+      if (accounts.length) {
+        setAccount(accounts[0]);
+      }
+    });
+  }, []);
+
+  if (!hasMounted) {
+    return null;
+  }
+
   const addExpense = () => {
     setLoading(true);
-    console.log(loading);
     splitConnectContract.addExpense(description, amount);
   };
 
   const onNewExpense = () => setLoading(false);
+
+  const transfer = async (amount: number) => {
+    if (account) {
+      await signer.sendTransaction({
+        from: account,
+        to: users.find((user) => user.address !== account)?.address,
+        value: ethers.utils.parseEther(amount.toString()),
+      }).catch(() => alert('Error. You probably dont have enough funds'));
+    } else {
+      const accounts: string[] = await ethereum.request({ method: 'eth_accounts' });
+      if (accounts.length) {
+        setAccount(accounts[0]);
+      }
+    }
+  };
 
   splitConnectContract.on('AddExpense', onNewExpense);
 
@@ -58,9 +82,9 @@ const Home: NextPage = () => {
                 <div className="absolute"></div>
               </div>
               <div className="flex flex-col items-center justify-center w-full -mt-12 space-y-1">
-                <span className="text-xl font-semibold text-gray-800 whitespace-nowrap">
+                <h1 className="text-xl font-semibold text-gray-800 whitespace-nowrap">
                   ETH Amsterdam 2022
-                </span>
+                </h1>
                 <div className="flex">
                   {/* <button className="px-4 py-2 mr-4 font-bold rounded bg-secondary hover:bg-primary">
                     ADD USER
@@ -83,7 +107,7 @@ const Home: NextPage = () => {
             />
           )}
           {loading && <Loading />}
-          <Balances />
+          <Balances settleUp={transfer} me={account} />
         </div>
       </div>
     </div>

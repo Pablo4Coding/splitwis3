@@ -9,6 +9,7 @@ module.exports = {
       other: '#EDB1F1',
       red: 'red',
       white: 'white',
+      green: 'green',
     },
   },
   plugins: [],
