@@ -42,25 +42,31 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-r from-tertiary to-other">
-      <nav className="bg-other">
+    <div className="h-screen bg-gradient-to-r from-secondary to-secondary">
+      <nav className="border-b-2 border-white bg-secondary">
         <div className="flex items-center justify-between w-full px-2 py-4 border-b-1">
-          <Link href="/">
-            <a>
-              <div className="flex flex-col pl-3">
-                <h2 className="m-0 ml-3 font-medium">SplitConnect</h2>
-              </div>
-            </a>
-          </Link>
-          <Link href="/groups">
-            <a>
-              Groups
-            </a>
-          </Link>
+          {account && (
+            <>
+              <Link href="/">
+                <a>
+                  <div className="flex flex-col pl-3">
+                    <h2 className="m-0 ml-3 font-medium text-primary">SplitConnect</h2>
+                  </div>
+                </a>
+              </Link>
+              <Link href="/groups">
+                <a>Groups</a>
+              </Link>
+              <Link href="/activity">
+                <a>Activity</a>
+              </Link>
+            </>
+          )}
+
           {!account && (
-            <div className="">
+            <div className="w-full text-right">
               <button
-                className="px-4 py-2 font-bold rounded bg-primary hover:bg-secondary"
+                className="px-4 py-2 font-bold text-white rounded bg-tertiary hover:bg-secondary"
                 onClick={connect}>
                 Connect your wallet
               </button>

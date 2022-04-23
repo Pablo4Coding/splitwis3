@@ -1,7 +1,6 @@
 import { ethers } from 'ethers';
 import type { NextPage } from 'next';
 import { useState } from 'react';
-import Activity from '../components/activity';
 import Balances from '../components/balances';
 import ExpenseForm from '../components/expense-form';
 import Loading from '../components/loading';
@@ -85,7 +84,6 @@ const Home: NextPage = () => {
           )}
           {loading && <Loading />}
           <Balances />
-          <Activity />
         </div>
       </div>
     </div>
