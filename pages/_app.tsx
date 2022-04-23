@@ -1,9 +1,11 @@
+import { ApolloProvider } from '@apollo/client';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { ethers } from 'ethers';
 import type { AppProps } from 'next/app';
 import Link from 'next/link';
 import { useState } from 'react';
 import Web3Modal from 'web3modal';
+import client from '../apollo/client';
 import { AccountContext } from '../context/auth-context';
 import '../styles/globals.css';
 
@@ -69,7 +71,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       </nav>
       <div className="container mx-auto">
         <AccountContext.Provider value={account}>
-          <Component {...pageProps} />
+          <ApolloProvider client={client}>
+            <Component {...pageProps} />
+          </ApolloProvider>
         </AccountContext.Provider>
       </div>
     </div>

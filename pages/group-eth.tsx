@@ -1,16 +1,24 @@
-import type { NextPage } from 'next';
-import abi from '../SplitConnect.json';
 import { ethers } from 'ethers';
+import type { NextPage } from 'next';
 import { useState } from 'react';
-import Users from '../components/users';
+import Activity from '../components/activity';
+import Balances from '../components/balances';
 import ExpenseForm from '../components/expense-form';
 import Loading from '../components/loading';
+import useHasMounted from '../hooks/useHasMounted';
+import abi from '../SplitConnect.json';
 
 const Home: NextPage = () => {
   const [showAddExpense, setShowAddExpense] = useState<boolean>(false);
   const [description, setDescription] = useState<string | null>(null);
   const [amount, setAmount] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const hasMounted = useHasMounted();
+
+  if (!hasMounted) {
+    return null;
+  }
 
   const contractABI = abi.abi;
   const { ethereum } = window;
@@ -24,7 +32,7 @@ const Home: NextPage = () => {
 
   const addExpense = () => {
     setLoading(true);
-    console.log(loading)
+    console.log(loading);
     splitConnectContract.addExpense(description, amount);
   };
 
@@ -34,27 +42,26 @@ const Home: NextPage = () => {
 
   return (
     <div>
-      <div className="bg-white shadow-md rounded-lg overflow-hidden mx-auto">
-        <div className="card border border-gray-100 bg-purple-100 transition-shadow shadow-xl hover:shadow-xl w-max-2xl">
+      <div className="mx-auto overflow-hidden bg-white rounded-lg shadow-md">
+        <div className="transition-shadow bg-purple-100 border border-gray-100 shadow-xl card hover:shadow-xl w-max-2xl">
           <img
             src="https://image.freepik.com/free-vector/abstract-binary-code-techno-background_1048-12836.jpg"
-            className="h-48 w-screen"
+            className="w-screen h-48"
           />
           <div className="flex items-center p-4">
             <div className="relative flex flex-col items-center w-full">
-              <div className="h-24 w-24 md rounded-full relative avatar flex items-end justify-end text-purple-600 min-w-max absolute -top-16 flex bg-purple-200 text-purple-100 row-start-1 row-end-3 text-purple-650 ring-1 ring-white">
+              <div className="absolute relative flex items-end justify-end w-24 h-24 row-start-1 row-end-3 text-purple-100 text-purple-600 bg-purple-200 rounded-full md avatar min-w-max -top-16 text-purple-650 ring-1 ring-white">
                 <img
-                  className="w-40 h-30 rounded-full"
+                  className="w-40 rounded-full h-30"
                   src="https://miro.medium.com/max/3150/1*fHerDrCZy-D9W787CboY8Q.png"
                   alt="Neil image"
                 />
                 <div className="absolute"></div>
               </div>
-              <div className="flex flex-col space-y-1 justify-center items-center -mt-12 w-full">
-                <span className="text-xl whitespace-nowrap text-gray-800 font-semibold">
+              <div className="flex flex-col items-center justify-center w-full -mt-12 space-y-1">
+                <span className="text-xl font-semibold text-gray-800 whitespace-nowrap">
                   ETH Amsterdam 2022
                 </span>
-                <Users />
                 <div className="flex">
                   {/* <button className="px-4 py-2 mr-4 font-bold rounded bg-secondary hover:bg-primary">
                     ADD USER
@@ -77,6 +84,8 @@ const Home: NextPage = () => {
             />
           )}
           {loading && <Loading />}
+          <Balances />
+          <Activity />
         </div>
       </div>
     </div>
